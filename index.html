@@ -4,10 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>내 마음의 감정 날씨 & 관계 패턴 테스트</title>
+
+  <!-- 카카오톡 / 페이스북 / 인스타그램 링크 공유 시 대형 썸네일 카드 메타태그 (Open Graph) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaydenjeje.github.io/mind-weather-test/">
+  <meta property="og:title" content="내 마음의 감정 날씨 & 관계 패턴 테스트 🌤️">
+  <meta property="og:description" content="사람들과의 관계 속에서 나의 감정 스펙트럼은 어떤 유형일까? 10가지 시나리오로 내 마음의 온도를 알아보세요.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&h=630&fit=crop&q=80">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&h=630&fit=crop&q=80">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
   <style>
     :root {
       --primary: #6366f1;
@@ -1112,8 +1125,18 @@
       const resAdvice = document.getElementById('res-advice');
       const clinicalDetail = document.getElementById('clinical-detail-text');
 
+      let currentResultData = {
+        name: "감정 날씨 테스트",
+        headline: "내 마음의 감정 날씨와 관계 패턴을 확인해보세요",
+        imageUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&h=630&fit=crop&q=80"
+      };
+
       if (score >= 7) {
         // 고위험군 (7~10점)
+        currentResultData.name = "폭풍우 치는 밤의 롤러코스터형 🎢";
+        currentResultData.headline = "내 안의 사랑과 열정이 깊은 만큼, 상처와 두려움도 큰 사람";
+        currentResultData.imageUrl = "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&h=630&fit=crop&q=80";
+
         resTag.textContent = "감정 반응 스펙트럼";
         resEmoji.textContent = "🎢";
         resName.textContent = "폭풍우 치는 밤의 롤러코스터형";
@@ -1142,6 +1165,10 @@
         `;
       } else if (score >= 4) {
         // 중등도 (4~6점)
+        currentResultData.name = "밀물과 썰물 사이, 파도타기형 🌊";
+        currentResultData.headline = "평온하다가도 가끔씩 찾아오는 감정의 급류에 흔들리는 사람";
+        currentResultData.imageUrl = "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1200&h=630&fit=crop&q=80";
+
         resTag.textContent = "감정 반응 스펙트럼";
         resEmoji.textContent = "🌊";
         resName.textContent = "밀물과 썰물 사이, 파도타기형";
@@ -1168,6 +1195,10 @@
         `;
       } else {
         // 안정형 (0~3점)
+        currentResultData.name = "단단한 닻을 내린 잔잔한 호수형 ⛵";
+        currentResultData.headline = "주변의 바람에도 흔들리지 않고 스스로의 중심을 지키는 사람";
+        currentResultData.imageUrl = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&h=630&fit=crop&q=80";
+
         resTag.textContent = "감정 반응 스펙트럼";
         resEmoji.textContent = "⛵";
         resName.textContent = "단단한 닻을 내린 잔잔한 호수형";
@@ -1207,11 +1238,15 @@
     }
 
     function shareKakao() {
+      const shareUrl = "https://kaydenjeje.github.io/mind-weather-test/";
+      const title = `[심리테스트 결과] 나의 유형은 '${currentResultData.name}'!`;
+      const desc = `"${currentResultData.headline}"\n\n사람들과의 관계 속에서 나의 감정 온도는 몇 도일까? 10가지 일상 시나리오로 확인해보세요 🌤️`;
+
       if (navigator.share) {
         navigator.share({
-          title: '내 마음의 감정 날씨 & 관계 패턴 테스트',
-          text: '나의 감정 스펙트럼은 어떤 유형일까? 지금 확인해보세요!',
-          url: window.location.href,
+          title: title,
+          text: desc,
+          url: shareUrl
         }).catch(() => {});
       } else {
         copyResultLink();
@@ -1219,8 +1254,9 @@
     }
 
     function copyResultLink() {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        alert('링크가 복사되었습니다! 친구들에게 공유해보세요.');
+      const shareUrl = "https://kaydenjeje.github.io/mind-weather-test/";
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert('테스트 링크가 복사되었습니다!\n카카오톡이나 인스타그램 등에 붙여넣기하시면 대표 이미지 카드와 함께 예쁘게 전송됩니다 🌸');
       }).catch(() => {
         alert('주소창의 링크를 복사하여 공유해주세요.');
       });
@@ -1237,15 +1273,13 @@
         btn.disabled = true;
         btnText.textContent = "⏳ 고화질 이미지 생성 중...";
 
-        // 렌더링 대기
-        await new Promise(r => setTimeout(r, 150));
-
         const captureCard = document.getElementById('capture-card');
         
-        // html2canvas 실행
+        // html2canvas 옵션 안정화
         const canvas = await html2canvas(captureCard, {
-          scale: 2.2,
+          scale: 2,
           useCORS: true,
+          allowTaint: true,
           backgroundColor: '#ffffff',
           logging: false
         });
@@ -1253,38 +1287,23 @@
         generatedImageDataUrl = canvas.toDataURL('image/png');
         document.getElementById('modal-preview-img').src = generatedImageDataUrl;
 
-        // Blob 변환 및 네이티브 공유 시도
-        canvas.toBlob(async (blob) => {
-          const fileName = '내_감정날씨_테스트_결과.png';
-          const file = new File([blob], fileName, { type: 'image/png' });
+        // 1. 자동으로 파일 다운로드 트리거
+        const downloadLink = document.createElement('a');
+        downloadLink.href = generatedImageDataUrl;
+        downloadLink.download = '내_감정날씨_테스트_결과.png';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
 
-          let sharedNatively = false;
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({
-                files: [file],
-                title: '내 마음의 감정 날씨 & 관계 패턴 테스트 결과',
-                text: '나의 감정 스펙트럼 유형 결과 카드입니다! 🌸\n나도 테스트해보기: ' + window.location.href
-              });
-              sharedNatively = true;
-            } catch (shareErr) {
-              // 사용자가 공유창을 취소한 경우 등
-              console.log('Share dismissed or cancelled:', shareErr);
-            }
-          }
+        // 2. 모달 팝업 열기
+        document.getElementById('image-modal').classList.add('active');
 
-          // 네이티브 공유를 지원하지 않거나 모달을 띄워야 하는 경우
-          if (!sharedNatively) {
-            document.getElementById('image-modal').classList.add('active');
-          }
-
-          btnText.innerHTML = originalText;
-          btn.disabled = false;
-        }, 'image/png');
+        btnText.innerHTML = originalText;
+        btn.disabled = false;
 
       } catch (err) {
         console.error('Image capture error:', err);
-        alert('이미지 생성 중 오류가 발생했습니다. 브라우저에서 화면을 캡처하시거나 다시 시도해주세요.');
+        alert('이미지 생성 중 오류가 발생했습니다. 브라우저 화면을 직접 캡처하시거나 다시 시도해 주세요.');
         btnText.innerHTML = originalText;
         btn.disabled = false;
       }
