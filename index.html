@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
       --primary: #6366f1;
@@ -486,20 +487,89 @@
       word-break: keep-all;
     }
 
+    /* CAPTURE CARD STYLES */
+    .capture-container {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 20px;
+      border: 1.5px solid #e0e7ff;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .capture-header-brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #6366f1;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px dashed #e0e7ff;
+      letter-spacing: -0.2px;
+    }
+
+    .capture-footer-brand {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed #e0e7ff;
+      text-align: center;
+      font-size: 11.5px;
+      color: #6b7280;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .capture-url-badge {
+      background: #f3f4f6;
+      color: #4b5563;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: monospace;
+    }
+
     /* ACTION BUTTONS */
+    .btn-image-share {
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 15.5px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 18px -4px rgba(236, 72, 153, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .btn-image-share:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+
     .share-group {
       display: flex;
       gap: 10px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .btn-share {
       flex: 1;
-      padding: 14px;
+      padding: 13px;
       border-radius: 14px;
       border: 1px solid var(--border);
       background: #ffffff;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #374151;
       cursor: pointer;
@@ -522,6 +592,103 @@
 
     .btn-kakao:hover {
       background: #fdd835;
+    }
+
+    /* IMAGE PREVIEW MODAL */
+    .image-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .image-modal-backdrop.active {
+      display: flex;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .modal-content-card {
+      background: #ffffff;
+      border-radius: 24px;
+      max-width: 380px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #9ca3af;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      text-align: center;
+    }
+
+    .preview-result-img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      margin-bottom: 12px;
+    }
+
+    .modal-guide-text {
+      font-size: 12.5px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-download-img {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     /* CLINICAL DISCLAIMER ACCORDION */
@@ -634,74 +801,95 @@
 
     <!-- 4. RESULT SCREEN -->
     <div class="screen result-screen" id="screen-result">
-      <div class="result-card-box">
-        <span class="result-tag" id="res-tag">감정 스펙트럼 유형</span>
-        <div class="result-char-emoji" id="res-emoji">🎢</div>
-        <h2 class="result-persona-name" id="res-name">유형 타이틀</h2>
-        <div class="result-headline" id="res-headline">"한 줄 요약 슬로건"</div>
 
-        <div class="hashtags" id="res-hashtags">
-          <!-- 태그들 삽입 -->
-        </div>
-      </div>
-
-      <!-- 성향 스펙트럼 바 -->
-      <div class="metrics-card">
-        <div class="metric-title">
-          <span>나의 감정 지표 스펙트럼</span>
-          <span style="color: var(--primary); font-size: 12px;">정밀 진단</span>
+      <!-- 인스타그램/카카오톡 공유용 캡처 카드 영역 시작 -->
+      <div class="capture-container" id="capture-card">
+        <div class="capture-header-brand">
+          <span>🌸 2026 내 마음의 감정 날씨 테스트</span>
+          <span>EMOTIONAL CLIMATE</span>
         </div>
 
-        <div class="metric-row">
-          <div class="metric-label-group">
-            <span class="metric-label">관계 불안 및 애착 민감도</span>
-            <span class="metric-val" id="val-anxiety">85%</span>
+        <div class="result-card-box">
+          <span class="result-tag" id="res-tag">감정 스펙트럼 유형</span>
+          <div class="result-char-emoji" id="res-emoji">🎢</div>
+          <h2 class="result-persona-name" id="res-name">유형 타이틀</h2>
+          <div class="result-headline" id="res-headline">"한 줄 요약 슬로건"</div>
+
+          <div class="hashtags" id="res-hashtags">
+            <!-- 태그들 삽입 -->
           </div>
-          <div class="bar-bg"><div class="bar-fill" id="bar-anxiety" style="width: 85%;"></div></div>
         </div>
 
-        <div class="metric-row">
-          <div class="metric-label-group">
-            <span class="metric-label">감정 기복 및 반응성</span>
-            <span class="metric-val" id="val-mood">90%</span>
+        <!-- 성향 스펙트럼 바 -->
+        <div class="metrics-card">
+          <div class="metric-title">
+            <span>나의 감정 지표 스펙트럼</span>
+            <span style="color: var(--primary); font-size: 12px;">정밀 진단</span>
           </div>
-          <div class="bar-bg"><div class="bar-fill" id="bar-mood" style="width: 90%;"></div></div>
-        </div>
 
-        <div class="metric-row">
-          <div class="metric-label-group">
-            <span class="metric-label">스트레스 충동 지수</span>
-            <span class="metric-val" id="val-impulse">70%</span>
+          <div class="metric-row">
+            <div class="metric-label-group">
+              <span class="metric-label">관계 불안 및 애착 민감도</span>
+              <span class="metric-val" id="val-anxiety">85%</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-anxiety" style="width: 85%;"></div></div>
           </div>
-          <div class="bar-bg"><div class="bar-fill" id="bar-impulse" style="width: 70%;"></div></div>
-        </div>
 
-        <div class="metric-row">
-          <div class="metric-label-group">
-            <span class="metric-label">내면 공허감 및 자기상 혼란</span>
-            <span class="metric-val" id="val-empty">75%</span>
+          <div class="metric-row">
+            <div class="metric-label-group">
+              <span class="metric-label">감정 기복 및 반응성</span>
+              <span class="metric-val" id="val-mood">90%</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-mood" style="width: 90%;"></div></div>
           </div>
-          <div class="bar-bg"><div class="bar-fill" id="bar-empty" style="width: 75%;"></div></div>
+
+          <div class="metric-row">
+            <div class="metric-label-group">
+              <span class="metric-label">스트레스 충동 지수</span>
+              <span class="metric-val" id="val-impulse">70%</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-impulse" style="width: 70%;"></div></div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-label-group">
+              <span class="metric-label">내면 공허감 및 자기상 혼란</span>
+              <span class="metric-val" id="val-empty">75%</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" id="bar-empty" style="width: 75%;"></div></div>
+          </div>
+        </div>
+
+        <!-- 세부 설명 카드들 -->
+        <div class="desc-block">
+          <div class="desc-title">💡 나의 성향과 관계 패턴</div>
+          <div class="desc-content" id="res-summary"></div>
+        </div>
+
+        <div class="desc-block">
+          <div class="desc-title">⚠️ 내가 자주 빠지는 마음의 함정</div>
+          <div class="desc-content" id="res-trap"></div>
+        </div>
+
+        <div class="desc-block">
+          <div class="desc-title">🌱 나를 위한 마음 처방전</div>
+          <div class="desc-content" id="res-advice"></div>
+        </div>
+
+        <div class="capture-footer-brand">
+          <span>✨ 나도 테스트 해보기</span>
+          <span class="capture-url-badge">kaydenjeje.github.io/mind-weather-test</span>
         </div>
       </div>
+      <!-- 캡처 카드 영역 종료 -->
 
-      <!-- 세부 설명 카드들 -->
-      <div class="desc-block">
-        <div class="desc-title">💡 나의 성향과 관계 패턴</div>
-        <div class="desc-content" id="res-summary"></div>
-      </div>
+      <!-- 이미지 생성 및 공유 메인 액션 버튼 -->
+      <button class="btn-image-share" id="btn-capture-share" onclick="captureAndShareResult()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span id="btn-capture-text">📸 결과 카드 이미지로 저장 / 공유하기</span>
+      </button>
 
-      <div class="desc-block">
-        <div class="desc-title">⚠️ 내가 자주 빠지는 마음의 함정</div>
-        <div class="desc-content" id="res-trap"></div>
-      </div>
-
-      <div class="desc-block">
-        <div class="desc-title">🌱 나를 위한 마음 처방전</div>
-        <div class="desc-content" id="res-advice"></div>
-      </div>
-
-      <!-- 공유 버튼 그룹 -->
+      <!-- 부가 공유 버튼 그룹 -->
       <div class="share-group">
         <button class="btn-share btn-kakao" onclick="shareKakao()">
           💬 카카오톡 공유
@@ -725,6 +913,29 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- 이미지 미리보기 및 저장 모달 -->
+    <div class="image-modal-backdrop" id="image-modal" onclick="closeImageModal(event)">
+      <div class="modal-content-card" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span>✨</span> 결과 카드 완성!
+          </div>
+          <button class="btn-close-modal" onclick="closeImageModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <img id="modal-preview-img" class="preview-result-img" alt="결과 카드 미리보기" />
+          <div class="modal-guide-text">
+            💡 스마트폰에서는 위 이미지를 <strong>길게 꾹 눌러</strong><br>[사진 앱에 저장]하거나 [복사]하실 수 있습니다.
+          </div>
+          <div class="modal-actions">
+            <button class="btn-download-img" id="btn-modal-download" onclick="downloadGeneratedImage()">
+              💾 갤러리에 저장하기
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -1013,6 +1224,87 @@
       }).catch(() => {
         alert('주소창의 링크를 복사하여 공유해주세요.');
       });
+    }
+
+    let generatedImageDataUrl = null;
+
+    async function captureAndShareResult() {
+      const btn = document.getElementById('btn-capture-share');
+      const btnText = document.getElementById('btn-capture-text');
+      const originalText = btnText.innerHTML;
+
+      try {
+        btn.disabled = true;
+        btnText.textContent = "⏳ 고화질 이미지 생성 중...";
+
+        // 렌더링 대기
+        await new Promise(r => setTimeout(r, 150));
+
+        const captureCard = document.getElementById('capture-card');
+        
+        // html2canvas 실행
+        const canvas = await html2canvas(captureCard, {
+          scale: 2.2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          logging: false
+        });
+
+        generatedImageDataUrl = canvas.toDataURL('image/png');
+        document.getElementById('modal-preview-img').src = generatedImageDataUrl;
+
+        // Blob 변환 및 네이티브 공유 시도
+        canvas.toBlob(async (blob) => {
+          const fileName = '내_감정날씨_테스트_결과.png';
+          const file = new File([blob], fileName, { type: 'image/png' });
+
+          let sharedNatively = false;
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: '내 마음의 감정 날씨 & 관계 패턴 테스트 결과',
+                text: '나의 감정 스펙트럼 유형 결과 카드입니다! 🌸\n나도 테스트해보기: ' + window.location.href
+              });
+              sharedNatively = true;
+            } catch (shareErr) {
+              // 사용자가 공유창을 취소한 경우 등
+              console.log('Share dismissed or cancelled:', shareErr);
+            }
+          }
+
+          // 네이티브 공유를 지원하지 않거나 모달을 띄워야 하는 경우
+          if (!sharedNatively) {
+            document.getElementById('image-modal').classList.add('active');
+          }
+
+          btnText.innerHTML = originalText;
+          btn.disabled = false;
+        }, 'image/png');
+
+      } catch (err) {
+        console.error('Image capture error:', err);
+        alert('이미지 생성 중 오류가 발생했습니다. 브라우저에서 화면을 캡처하시거나 다시 시도해주세요.');
+        btnText.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    function downloadGeneratedImage() {
+      if (!generatedImageDataUrl) return;
+      const link = document.createElement('a');
+      link.href = generatedImageDataUrl;
+      link.download = '내_감정날씨_테스트_결과.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function closeImageModal(e) {
+      if (e && e.target && e.target.id !== 'image-modal' && !e.target.classList.contains('btn-close-modal')) {
+        return;
+      }
+      document.getElementById('image-modal').classList.remove('active');
     }
   </script>
 </body>
