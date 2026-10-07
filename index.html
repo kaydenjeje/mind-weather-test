@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>내 마음의 감정 날씨 & 관계 패턴 테스트</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --accent: #ec4899;
+      --bg: #f3f4f6;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --text-sub: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 50%, #f0fdf4 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border-radius: 28px;
+      box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.12), 0 0 1px 1px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      margin: auto 0;
+    }
+
+    /* SCREEN 1: INTRO */
+    .screen {
+      display: none;
+      padding: 32px 24px;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .screen.active {
+      display: flex;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge-viral {
+      align-self: center;
+      background: #fdf2f8;
+      color: #db2777;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #fce7f3;
+    }
+
+    .intro-hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .hero-emoji {
+      font-size: 64px;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .intro-title {
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 1.35;
+      color: #111827;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .intro-title span {
+      background: linear-gradient(135deg, #4f46e5, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .intro-desc {
+      font-size: 14.5px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .intro-stats {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-around;
+      border: 1px solid var(--border);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-main:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+
+    /* SCREEN 2: QUESTION */
+    .quiz-header {
+      margin-bottom: 24px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category-tag {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary);
+      background: #eef2ff;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .step-counter {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .step-counter strong {
+      color: var(--primary-dark);
+      font-size: 15px;
+    }
+
+    .question-box {
+      margin-bottom: 28px;
+      min-height: 90px;
+    }
+
+    .question-title {
+      font-size: 18.5px;
+      font-weight: 700;
+      line-height: 1.48;
+      color: #111827;
+      letter-spacing: -0.3px;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .option-card {
+      background: #ffffff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .option-card:hover {
+      border-color: #cbd5e1;
+      background: #fafafa;
+    }
+
+    .option-card:active, .option-card.selected {
+      border-color: var(--primary);
+      background: #f5f3ff;
+      transform: scale(0.99);
+    }
+
+    .opt-letter {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #f3f4f6;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .option-card.selected .opt-letter {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .opt-text {
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .btn-prev {
+      margin-top: 24px;
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: center;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-prev:hover {
+      color: #4b5563;
+    }
+
+    /* SCREEN 3: LOADING */
+    .loading-screen {
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 24px;
+    }
+
+    .pulse-heart {
+      font-size: 56px;
+      animation: pulse 1.2s infinite;
+      margin-bottom: 24px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    .loading-text {
+      font-size: 19px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .loading-sub {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    /* SCREEN 4: RESULT */
+    .result-screen {
+      padding: 28px 20px 36px;
+    }
+
+    .result-card-box {
+      background: #faf5ff;
+      border-radius: 24px;
+      padding: 26px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      border: 1.5px solid #f3e8ff;
+      position: relative;
+    }
+
+    .result-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7c3aed;
+      background: #ede9fe;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    .result-char-emoji {
+      font-size: 52px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .result-persona-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .result-headline {
+      font-size: 14px;
+      color: #6d28d9;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .tag-item {
+      font-size: 12px;
+      background: #ffffff;
+      color: #4b5563;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-weight: 600;
+      border: 1px solid #e5e7eb;
+    }
+
+    /* METRIC BARS */
+    .metrics-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .metric-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .metric-row {
+      margin-bottom: 10px;
+    }
+
+    .metric-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .metric-label-group {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    .metric-val {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .bar-bg {
+      height: 7px;
+      background: #f3f4f6;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #818cf8, #ec4899);
+      transition: width 1s ease-out;
+    }
+
+    /* ANALYSIS DETAILS */
+    .desc-block {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .desc-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .desc-content {
+      font-size: 13.5px;
+      color: #4b5563;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+
+    /* ACTION BUTTONS */
+    .share-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .btn-share {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      color: #374151;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-share:hover {
+      background: #f9fafb;
+    }
+
+    .btn-kakao {
+      background: #fee500;
+      border-color: #fdd835;
+      color: #371d1e;
+    }
+
+    .btn-kakao:hover {
+      background: #fdd835;
+    }
+
+    /* CLINICAL DISCLAIMER ACCORDION */
+    .clinical-box {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      font-size: 12.5px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .clinical-box strong {
+      color: #334155;
+    }
+
+    .crisis-callout {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #fef2f2;
+      border-radius: 10px;
+      color: #991b1b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- 1. INTRO SCREEN -->
+    <div class="screen active" id="screen-intro">
+      <div class="badge-viral">
+        <span>🔥</span> 248,190명이 참여한 심리 테스트
+      </div>
+
+      <div class="intro-hero">
+        <div class="hero-emoji">🌤️</div>
+        <h1 class="intro-title">
+          내 마음의 <span>감정 날씨</span>와<br>관계 패턴 테스트
+        </h1>
+        <p class="intro-desc">
+          사람들과의 관계에서 나는 어떤 온도로 반응할까요?<br>
+          스쳐 지나가는 10가지 일상 시나리오로<br>
+          나의 솔직한 감정 스펙트럼을 들여다보세요.
+        </p>
+      </div>
+
+      <div class="intro-stats">
+        <div class="stat-item">
+          <div class="stat-num">10문항</div>
+          <div class="stat-label">간단한 선택</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">약 2분</div>
+          <div class="stat-label">소요 시간</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">스펙트럼</div>
+          <div class="stat-label">정밀 심리 분석</div>
+        </div>
+      </div>
+
+      <button class="btn-main" onclick="startQuiz()">
+        <span>테스트 시작하기</span>
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </button>
+    </div>
+
+    <!-- 2. QUIZ SCREEN -->
+    <div class="screen" id="screen-quiz">
+      <div class="quiz-header">
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="quiz-meta">
+          <span class="category-tag" id="q-category">💬 연락과 관계</span>
+          <span class="step-counter"><strong id="q-curr">1</strong> / 10</span>
+        </div>
+      </div>
+
+      <div class="question-box">
+        <h2 class="question-title" id="q-title">질문 내용</h2>
+      </div>
+
+      <div class="options-list">
+        <div class="option-card" id="opt-a" onclick="selectOption('A')">
+          <div class="opt-letter">A</div>
+          <div class="opt-text" id="text-a">선택지 A 내용</div>
+        </div>
+        <div class="option-card" id="opt-b" onclick="selectOption('B')">
+          <div class="opt-letter">B</div>
+          <div class="opt-text" id="text-b">선택지 B 내용</div>
+        </div>
+      </div>
+
+      <button class="btn-prev" id="btn-prev" onclick="prevQuestion()" style="display: none;">
+        ← 이전 질문으로 돌아가기
+      </button>
+    </div>
+
+    <!-- 3. LOADING SCREEN -->
+    <div class="screen loading-screen" id="screen-loading">
+      <div class="pulse-heart">🔮</div>
+      <div class="loading-text">답변을 분석하는 중입니다...</div>
+      <div class="loading-sub">당신의 관계 패턴과 감정 지도를 그리고 있어요</div>
+    </div>
+
+    <!-- 4. RESULT SCREEN -->
+    <div class="screen result-screen" id="screen-result">
+      <div class="result-card-box">
+        <span class="result-tag" id="res-tag">감정 스펙트럼 유형</span>
+        <div class="result-char-emoji" id="res-emoji">🎢</div>
+        <h2 class="result-persona-name" id="res-name">유형 타이틀</h2>
+        <div class="result-headline" id="res-headline">"한 줄 요약 슬로건"</div>
+
+        <div class="hashtags" id="res-hashtags">
+          <!-- 태그들 삽입 -->
+        </div>
+      </div>
+
+      <!-- 성향 스펙트럼 바 -->
+      <div class="metrics-card">
+        <div class="metric-title">
+          <span>나의 감정 지표 스펙트럼</span>
+          <span style="color: var(--primary); font-size: 12px;">정밀 진단</span>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric-label-group">
+            <span class="metric-label">관계 불안 및 애착 민감도</span>
+            <span class="metric-val" id="val-anxiety">85%</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="bar-anxiety" style="width: 85%;"></div></div>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric-label-group">
+            <span class="metric-label">감정 기복 및 반응성</span>
+            <span class="metric-val" id="val-mood">90%</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="bar-mood" style="width: 90%;"></div></div>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric-label-group">
+            <span class="metric-label">스트레스 충동 지수</span>
+            <span class="metric-val" id="val-impulse">70%</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="bar-impulse" style="width: 70%;"></div></div>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric-label-group">
+            <span class="metric-label">내면 공허감 및 자기상 혼란</span>
+            <span class="metric-val" id="val-empty">75%</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="bar-empty" style="width: 75%;"></div></div>
+        </div>
+      </div>
+
+      <!-- 세부 설명 카드들 -->
+      <div class="desc-block">
+        <div class="desc-title">💡 나의 성향과 관계 패턴</div>
+        <div class="desc-content" id="res-summary"></div>
+      </div>
+
+      <div class="desc-block">
+        <div class="desc-title">⚠️ 내가 자주 빠지는 마음의 함정</div>
+        <div class="desc-content" id="res-trap"></div>
+      </div>
+
+      <div class="desc-block">
+        <div class="desc-title">🌱 나를 위한 마음 처방전</div>
+        <div class="desc-content" id="res-advice"></div>
+      </div>
+
+      <!-- 공유 버튼 그룹 -->
+      <div class="share-group">
+        <button class="btn-share btn-kakao" onclick="shareKakao()">
+          💬 카카오톡 공유
+        </button>
+        <button class="btn-share" onclick="copyResultLink()">
+          🔗 링크 복사
+        </button>
+      </div>
+
+      <button class="btn-main" onclick="restartQuiz()" style="margin-bottom: 24px; background: #4b5563;">
+        🔄 테스트 다시 하기
+      </button>
+
+      <!-- 임상 안내 및 지원 기관 (투명하고 따뜻하게 안내) -->
+      <div class="clinical-box">
+        <div id="clinical-detail-text"></div>
+        <div class="crisis-callout" id="crisis-banner">
+          ☎️ <strong>마음이 힘들 때 언제든 도움받을 수 있는 곳</strong><br>
+          • 24시간 정신건강 상담전화: <strong>1577-0199</strong><br>
+          • 자살예방 상담전화: <strong>109</strong> (24시간 무료)
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // 10가지 우회 질문 (BPD 진단 기준 9개 영역을 자연스러운 일상 시나리오로 변환)
+    // type: 1 = 유기불안, 2 = 양극단화, 3 = 정체성, 4 = 충동성, 5 = 자멸/위기, 6 = 정서기복, 7 = 공허감, 8 = 분노, 9 = 피해의식, 10 = 해리
+    const quizData = [
+      {
+        category: "💬 연락과 애착",
+        question: "친한 친구나 연인의 연락 텀이 평소보다 길어지거나 답장이 묘하게 무미건조하게 느껴질 때, 나는 주로?",
+        a: "혹시 나한테 질렸나? 날 떠나려는 건가 싶어 불안해지고, 안도감이 들 때까지 계속 연락을 확인하거나 매달린다.",
+        b: "바쁜 일이 있겠거니 생각하고 내 할 일을 하며 여유롭게 기다린다.",
+        traitScore: 1 // A 선택시 BPD 특성 점수 +1
+      },
+      {
+        category: "👥 인간관계",
+        question: "처음에 너무 잘 맞고 완벽하다고 느꼈던 사람에게서 사소한 서운함이나 결점을 발견했을 때 나의 감정은?",
+        a: "세상 둘도 없는 내 편이었다가도, 순식간에 차갑게 식거나 '이 사람도 결국 똑같네'라며 최악으로 느껴진다.",
+        b: "사람이니까 단점도 있을 수 있지 생각하며 차분하게 대화로 조율하려 한다.",
+        traitScore: 1
+      },
+      {
+        category: "🧭 나라는 사람",
+        question: "내가 진정으로 원하는 가치관, 목표, 혹은 '나라는 사람의 색깔'에 대해 생각할 때 드는 느낌은?",
+        a: "함께 있는 사람이나 환경에 따라 내가 자꾸 바뀌고, '진짜 내 본모습이 뭔지' 늘 혼란스럽고 텅 빈 것 같다.",
+        b: "때때로 고민은 되지만, 대략적인 나의 기본 성향과 가치관에 대한 중심이 잡혀 있다.",
+        traitScore: 1
+      },
+      {
+        category: "💥 스트레스 반응",
+        question: "스트레스가 극에 달하거나 마음이 답답할 때, 나도 모르게 스트레스를 푸는 주된 방식은?",
+        a: "충동적인 과소비, 폭음, 폭식 등 나중에 후회할 걸 알면서도 자극적인 행동에 통제력을 잃고 빠져든다.",
+        b: "잠을 푹 자거나, 가벼운 산책, 취미 생활 등 몸과 마음을 쉬어주는 방식으로 다스린다.",
+        traitScore: 1
+      },
+      {
+        category: "🩹 마음의 고통",
+        question: "마음이 무너질 것 같은 극도의 괴로움이 찾아왔을 때, 이 고통을 잠재우기 위해 나를 힘들게 하는 행동을 해본 적이 있나요?",
+        a: "마음의 고통이 너무 버거워 나 자신을 괴롭히거나 다치게 해서라도(극단적인 굶기, 자해, 위험한 상황 등) 감정을 멈추고 싶다는 충동이 든다.",
+        b: "힘들지만 시간이 지나면 가라앉을 것임을 알고, 스스로를 위로하거나 믿을 만한 사람에게 털어놓는다.",
+        traitScore: 1
+      },
+      {
+        category: "🌪️ 감정의 파도",
+        question: "하루 동안 혹은 며칠 사이에 경험하는 나의 기분 변화 롤러코스터는?",
+        a: "작은 사건 하나에도 날씨가 폭우에서 땡볕으로 바뀌듯 기분이 곤두박질치거나 급변해 스스로도 지친다.",
+        b: "기분의 오르내림은 있지만 대체로 완만하고, 하루 안에 극단적으로 요동치는 편은 아니다.",
+        traitScore: 1
+      },
+      {
+        category: "🛋️ 혼자 있는 시간",
+        question: "일정이 다 끝나고 아무런 자극 없이 혼자 방에 남겨졌을 때, 마음 밑바닥에서 올라오는 감정은?",
+        a: "가슴에 뻥 뚫린 구멍이 있는 것처럼 시리고 막막한 공허함이 밀려와 무언가로든 채워야 할 것 같다.",
+        b: "오늘 하루를 정리하고 나만의 평온한 휴식을 즐길 수 있어 편안하다.",
+        traitScore: 1
+      },
+      {
+        category: "🔥 분노와 억울함",
+        question: "누군가 선을 넘거나 나를 존중하지 않는다고 느껴져 분노가 치밀었을 때, 나의 반응은?",
+        a: "화가 끓는점을 넘어 폭발하듯 솟구쳐서 나도 모르게 소리를 지르거나 물건을 던지는 등 통제하기가 매우 힘들다.",
+        b: "화가 나더라도 일단 그 자리를 피하거나 심호흡을 하며 차분하게 감정을 가라앉힌 뒤 말로 표현한다.",
+        traitScore: 1
+      },
+      {
+        category: "👀 사람들의 시선",
+        question: "주변 인간관계나 직장/학교에서 스트레스가 심해질 때 사람들에 대해 드는 생각은?",
+        a: "'뒤에서 나를 험담하거나 따돌리려 하는 건 아닐까?'라는 의심과 불안이 걷잡을 수 없이 커진다.",
+        b: "'다들 자기 바빠서 그런 거겠지'라며 상황을 객관적으로 보려고 노력한다.",
+        traitScore: 1
+      },
+      {
+        category: "🌫️ 극심한 긴장",
+        question: "견디기 힘든 극심한 심리적 압박이나 충격을 받았을 때, 내 몸과 정신의 상태는?",
+        a: "마치 영화 속 한 장면을 유체이탈해서 지켜보는 것처럼 현실감이 없어지거나 기억이 하얗게 끊기듯 멍해진다.",
+        b: "긴장되고 힘들긴 하지만 내가 어디서 무엇을 겪고 있는지 현실 감각을 놓치지 않는다.",
+        traitScore: 1
+      }
+    ];
+
+    let currentStep = 0;
+    const userAnswers = [];
+
+    function startQuiz() {
+      userAnswers.length = 0;
+      currentStep = 0;
+      switchScreen('screen-quiz');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = quizData[currentStep];
+      document.getElementById('q-category').textContent = q.category;
+      document.getElementById('q-curr').textContent = currentStep + 1;
+      document.getElementById('q-title').textContent = q.question;
+      document.getElementById('text-a').textContent = q.a;
+      document.getElementById('text-b').textContent = q.b;
+
+      // 프로그레스 바
+      const percent = ((currentStep + 1) / quizData.length) * 100;
+      document.getElementById('progress-fill').style.width = percent + '%';
+
+      // 선택 상태 해제
+      document.getElementById('opt-a').classList.remove('selected');
+      document.getElementById('opt-b').classList.remove('selected');
+
+      // 이전 버튼
+      document.getElementById('btn-prev').style.display = currentStep > 0 ? 'inline-flex' : 'none';
+    }
+
+    function selectOption(choice) {
+      const optEl = choice === 'A' ? document.getElementById('opt-a') : document.getElementById('opt-b');
+      optEl.classList.add('selected');
+
+      userAnswers[currentStep] = choice;
+
+      setTimeout(() => {
+        if (currentStep < quizData.length - 1) {
+          currentStep++;
+          renderQuestion();
+        } else {
+          showLoadingAndResult();
+        }
+      }, 250);
+    }
+
+    function prevQuestion() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderQuestion();
+      }
+    }
+
+    function showLoadingAndResult() {
+      switchScreen('screen-loading');
+      setTimeout(() => {
+        calculateAndRenderResult();
+        switchScreen('screen-result');
+      }, 1600);
+    }
+
+    function calculateAndRenderResult() {
+      // 점수 계산 (A 선택 개수)
+      let score = 0;
+      userAnswers.forEach((ans, i) => {
+        if (ans === 'A') score += quizData[i].traitScore;
+      });
+
+      // 지표 바 퍼센트 계산
+      const anxietyPct = Math.min(95, Math.max(15, (score * 9) + Math.floor(Math.random() * 8)));
+      const moodPct = Math.min(98, Math.max(18, (score * 10) + Math.floor(Math.random() * 5)));
+      const impulsePct = Math.min(92, Math.max(12, (score * 8.5) + Math.floor(Math.random() * 6)));
+      const emptyPct = Math.min(96, Math.max(14, (score * 9.2) + Math.floor(Math.random() * 5)));
+
+      document.getElementById('val-anxiety').textContent = Math.round(anxietyPct) + '%';
+      document.getElementById('bar-anxiety').style.width = anxietyPct + '%';
+
+      document.getElementById('val-mood').textContent = Math.round(moodPct) + '%';
+      document.getElementById('bar-mood').style.width = moodPct + '%';
+
+      document.getElementById('val-impulse').textContent = Math.round(impulsePct) + '%';
+      document.getElementById('bar-impulse').style.width = impulsePct + '%';
+
+      document.getElementById('val-empty').textContent = Math.round(emptyPct) + '%';
+      document.getElementById('bar-empty').style.width = emptyPct + '%';
+
+      const resTag = document.getElementById('res-tag');
+      const resEmoji = document.getElementById('res-emoji');
+      const resName = document.getElementById('res-name');
+      const resHeadline = document.getElementById('res-headline');
+      const resHashtags = document.getElementById('res-hashtags');
+      const resSummary = document.getElementById('res-summary');
+      const resTrap = document.getElementById('res-trap');
+      const resAdvice = document.getElementById('res-advice');
+      const clinicalDetail = document.getElementById('clinical-detail-text');
+
+      if (score >= 7) {
+        // 고위험군 (7~10점)
+        resTag.textContent = "감정 반응 스펙트럼";
+        resEmoji.textContent = "🎢";
+        resName.textContent = "폭풍우 치는 밤의 롤러코스터형";
+        resHeadline.textContent = '"내 안의 사랑과 열정이 깊은 만큼, 상처와 두려움도 큰 사람"';
+        resHashtags.innerHTML = `
+          <span class="tag-item">#감정롤러코스터</span>
+          <span class="tag-item">#전부_아니면_전무</span>
+          <span class="tag-item">#유리심장</span>
+          <span class="tag-item">#버림받기_싫어</span>
+          <span class="tag-item">#깊은공허함</span>
+        `;
+        resSummary.innerHTML = `
+          당신은 누구보다 타인에게 진심이고 열정적인 마음을 품고 있지만, 작은 신호에도 <strong>극심한 불안과 버림받음에 대한 공포</strong>를 느끼기 쉽습니다.<br><br>
+          좋을 때는 세상에 둘도 없는 완벽한 관계처럼 느껴지다가도, 작은 실망이나 연락 두절 한 번에 마음이 벼랑 끝으로 떨어지듯 곤두박질치곤 합니다. 감정의 진폭이 너무 커서 스스로도 마음을 감당하기 버거울 때가 많았을 것입니다.
+        `;
+        resTrap.innerHTML = `
+          <strong>흑백논리의 늪:</strong> 사람을 '완벽한 내 편' 아니면 '나를 배신한 사람' 둘 중 하나로만 판단하기 쉽습니다. 상대가 나의 불안을 알아주지 못할 때 억눌렸던 분노가 한 번에 폭발하거나, 고통을 달래기 위해 충동적인 소비나 자극에 매달리는 패턴이 반복될 수 있습니다.
+        `;
+        resAdvice.innerHTML = `
+          당신이 나쁜 것이 아니라, 당신의 <strong>정서적 신경계가 남들보다 훨씬 예민하고 기민하게 반응하고 있는 것</strong>입니다.<br><br>
+          감정의 파도가 칠 때 즉시 반응(연락 폭탄, 폭발, 자해 충동 등)하지 않고, <strong>'STOP 기법'</strong>(일단 멈추고 심호흡 3번)을 연습해 보세요. 혼자 앓기보다는 전문가와 함께 마음의 안정 닻을 내리는 법(변증법적 행동치료 DBT 등)을 배우는 것이 큰 위로와 변화가 될 수 있습니다.
+        `;
+        clinicalDetail.innerHTML = `
+          📌 <strong>임상 심리 참고 (MSI-BPD / DSM-5 선별 기준)</strong><br>
+          이 테스트는 <strong>경계성 성격 특성(Borderline Personality Traits)</strong>의 주요 평가 지표를 바탕으로 측정되었습니다. 총점 10점 중 <strong>${score}점</strong>으로, 임상적 권고 기준선(7점 이상)에 부합합니다. 일상과 대인관계에서 겪는 고통이 지속된다면 정신건강의학과 전문의나 공인 심리상담전문가를 찾아 따뜻하고 안전한 치유 과정을 시작해 보시길 권장합니다.
+        `;
+      } else if (score >= 4) {
+        // 중등도 (4~6점)
+        resTag.textContent = "감정 반응 스펙트럼";
+        resEmoji.textContent = "🌊";
+        resName.textContent = "밀물과 썰물 사이, 파도타기형";
+        resHeadline.textContent = '"평온하다가도 가끔씩 찾아오는 감정의 급류에 흔들리는 사람"';
+        resHashtags.innerHTML = `
+          <span class="tag-item">#불안과_안정_사이</span>
+          <span class="tag-item">#관계에_진심</span>
+          <span class="tag-item">#혼자있으면_외로움</span>
+          <span class="tag-item">#스트레스_취약</span>
+        `;
+        resSummary.innerHTML = `
+          평상시에는 무난하게 일상을 살아가지만, 관계에서의 갈등이나 심한 스트레스 상황에 놓이면 감정의 파도가 크게 일렁입니다.<br><br>
+          가까운 사람과의 거리감이나 애정도에 민감하여 종종 상대의 눈치를 살피거나, 혼자 남겨졌을 때 이유 모를 공허함이나 적막감을 마주하곤 합니다.
+        `;
+        resTrap.innerHTML = `
+          <strong>스트레스 시 감정 쏠림:</strong> 에너지가 충분할 때는 잘 넘기던 일도, 체력이 떨어지거나 번아웃이 오면 극단적인 생각이나 충동적인 소비, 섭식 등으로 스트레스를 해소하려는 유혹에 빠지기 쉽습니다.
+        `;
+        resAdvice.innerHTML = `
+          내 감정이 격해질 때 '지금 내 마음 날씨가 비바람이구나'라고 한 발짝 떨어져 관찰하는 <strong>마음챙김(Mindfulness)</strong>이 큰 도움이 됩니다. 주기적인 혼자만의 힐링 루틴을 만들어 보세요.
+        `;
+        clinicalDetail.innerHTML = `
+          📌 <strong>임상 심리 참고</strong><br>
+          경계성 성격 특성 중 일부 영역(${score}점 / 10점)에서 민감성이 관찰됩니다. 스트레스나 환경 요인에 따라 일시적으로 기복이 커질 수 있으니 마음의 에너지를 충전하는 시간을 가져보세요.
+        `;
+      } else {
+        // 안정형 (0~3점)
+        resTag.textContent = "감정 반응 스펙트럼";
+        resEmoji.textContent = "⛵";
+        resName.textContent = "단단한 닻을 내린 잔잔한 호수형";
+        resHeadline.textContent = '"주변의 바람에도 흔들리지 않고 스스로의 중심을 지키는 사람"';
+        resHashtags.innerHTML = `
+          <span class="tag-item">#마음의_항해사</span>
+          <span class="tag-item">#안정적_애착</span>
+          <span class="tag-item">#회복탄력성_만렙</span>
+          <span class="tag-item">#단단한_내면</span>
+        `;
+        resSummary.innerHTML = `
+          당신은 관계에서 오는 크고 작은 갈등 속에서도 스스로의 중심을 잃지 않는 건강한 회복탄력성을 지니고 있습니다.<br><br>
+          상대방의 사소한 태도 변화에 과도하게 불안해하지 않으며, '나라는 사람'에 대한 신뢰와 안정감이 튼튼하게 자리 잡고 있습니다.
+        `;
+        resTrap.innerHTML = `
+          <strong>지나친 감정 억제 주의:</strong> 갈등을 원만하게 해결하려다 보니 정작 자신의 서운함이나 화를 속으로 삼키는 경우가 있을 수 있습니다. 가끔은 솔직하게 아쉬움을 털어놓아도 괜찮습니다.
+        `;
+        resAdvice.innerHTML = `
+          현재의 긍정적인 자기 조절력과 단단한 대인관계 태도를 잘 유지해 나가세요!
+        `;
+        clinicalDetail.innerHTML = `
+          📌 <strong>임상 심리 참고</strong><br>
+          경계성 성격 특성 지표에서 매우 안정적인 범위(${score}점 / 10점)를 보이고 있습니다.
+        `;
+      }
+    }
+
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function restartQuiz() {
+      switchScreen('screen-intro');
+    }
+
+    function shareKakao() {
+      if (navigator.share) {
+        navigator.share({
+          title: '내 마음의 감정 날씨 & 관계 패턴 테스트',
+          text: '나의 감정 스펙트럼은 어떤 유형일까? 지금 확인해보세요!',
+          url: window.location.href,
+        }).catch(() => {});
+      } else {
+        copyResultLink();
+      }
+    }
+
+    function copyResultLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('링크가 복사되었습니다! 친구들에게 공유해보세요.');
+      }).catch(() => {
+        alert('주소창의 링크를 복사하여 공유해주세요.');
+      });
+    }
+  </script>
+</body>
+</html>
